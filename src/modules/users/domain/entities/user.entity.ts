@@ -13,28 +13,28 @@ import { AuthTypes } from '../interfaces/auth-types.enum';
 @Index(['name'])
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  id: string;
+  public id: string;
 
   @Column({ type: 'varchar', length: 256, nullable: false })
-  name: string;
+  public name: string;
 
   @Column({ type: 'varchar', nullable: false, unique: true })
-  email: string;
+  public email: string;
 
   @Column({ name: 'email_verified', type: 'timestamp', nullable: true })
-  emailVerified: Date;
+  public emailVerified: Date;
 
   @Column({ type: 'varchar', nullable: true })
-  image: string;
+  public image: string;
 
   @Column({ name: 'verify_email', type: 'boolean', default: false })
-  verifyEmail: boolean;
+  public verifyEmail: boolean;
 
   @Column({ type: 'varchar', nullable: true })
-  password: string;
+  public password: string;
 
   @Column({ name: 'token_version', type: 'int', default: 0 })
-  tokenVersion: string;
+  public tokenVersion: string;
 
   @Column({
     name: 'auth_provider',
@@ -43,7 +43,7 @@ export class User {
     default: AuthTypes.LOCAL,
     nullable: false,
   })
-  authProvider: AuthTypes;
+  public authProvider: AuthTypes;
 
   @Column({
     name: 'auth_provider_id',
@@ -51,17 +51,17 @@ export class User {
     length: 256,
     nullable: true,
   })
-  authProviderId: string;
+  public authProviderId: string;
 
   @Column({ type: 'boolean', nullable: false, default: true })
-  active: boolean;
+  public active: boolean;
 
   @Column({ name: 'last_login', type: 'timestamp', nullable: true })
-  lastLogin: Date;
+  public lastLogin: Date;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
-  createdAt: Date;
+  public createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
-  updatedAt: Date;
+  public updatedAt: Date;
 }
