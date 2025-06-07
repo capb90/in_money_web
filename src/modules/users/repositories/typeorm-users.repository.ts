@@ -1,17 +1,19 @@
-import { TypeOrmBaseRepository } from '@shared/repositories/typeorm-base.repository';
 import { IUserRepository } from '../interfaces/IUsers.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
+import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from '../dtos/create-user.dto';
 
-export class TypeOrmUsersRepository
-  extends TypeOrmBaseRepository<User>
-  implements IUserRepository
-{
+@Injectable()
+export class TypeOrmUsersRepository implements IUserRepository {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {
-    super(userRepository);
+  ) {}
+
+  public async create(createUserDto: CreateUserDto): Promise<User> {
+    const userDb = this.userRepository.create(createUserDto);
+    return this.userRepository.save(userDb);
   }
 }
