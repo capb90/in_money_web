@@ -1,6 +1,5 @@
-import { DataSource } from 'typeorm';
 import { config } from 'dotenv';
-import { User } from './src/modules/users/domain/entities/user.entity'; // Ajusta la ruta según tu estructura
+import { DataSource } from 'typeorm';
 
 config();
 
@@ -11,7 +10,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DATABASE_USER || 'postgres',
   password: process.env.DATABASE_PASSWORD || 'password',
   database: process.env.DATABASE_DB || 'mydatabase',
-  entities: [User],
+  entities: ['src/**/*.entity.{.ts,.js}'],
   migrations: ['src/migrations/*.ts'],
   migrationsTableName: 'migrations',
   synchronize: false,
