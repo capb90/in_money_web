@@ -18,7 +18,9 @@
     "strictBindCallApply": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@app/configs":["src/configs/index"]
+      "@app/configs":["src/configs/index"],
+      "@users/*": ["src/modules/users/*"],
+      "@shared/*": ["src/modules/shared/*"]
     }
   }
 }
