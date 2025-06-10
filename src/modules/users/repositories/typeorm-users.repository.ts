@@ -16,4 +16,8 @@ export class TypeOrmUsersRepository implements IUserRepository {
     const userDb = this.userRepository.create(createUserDto);
     return this.userRepository.save(userDb);
   }
+
+  public async findByEmail(email: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { email } });
+  }
 }

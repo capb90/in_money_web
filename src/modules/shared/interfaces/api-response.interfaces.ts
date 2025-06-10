@@ -1,6 +1,5 @@
 export interface IApiErrors {
   message: string[];
-  error: string;
   statusCode: number;
 }
 
