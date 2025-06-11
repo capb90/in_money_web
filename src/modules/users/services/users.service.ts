@@ -5,6 +5,7 @@ import { BcryptService } from '@shared/services/bcrypt.service';
 import { UserResponseDto } from '@users/dtos/user-response.dto';
 import { transformToDto } from '@shared/utils/transform-to-dto.util';
 import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
+import { I18nAppService } from '@app/configs';
 
 @Injectable()
 export class UsersService {
@@ -12,13 +13,15 @@ export class UsersService {
     @Inject('IUserRepository')
     private readonly repository: IUserRepository,
     private readonly bcryptService: BcryptService,
+    private readonly i18n: I18nAppService,
   ) {}
 
   public async createUser(body: CreateUserDto): Promise<UserResponseDto> {
     const userExists = await this.repository.findByEmail(body.email);
     if (userExists) {
+      const message = await this.i18n.translate('errors.auth.EMAIL_EXIST');
       throw ErrorResponseFactory.badRequest({
-        message: 'Email already exists',
+        message,
       });
     }
 

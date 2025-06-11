@@ -1,0 +1,5 @@
+{
+  "auth": {
+    "EMAIL_EXIST": "El E-mail ya se encuentra registrado"
+  }
+}
