@@ -39,7 +39,7 @@ async function bootstrap() {
     }),
   );
   const httpAdapter = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionFilter(httpAdapter));
+  app.useGlobalFilters(new AllExceptionFilter(httpAdapter, configService));
 
   await app.listen(port ?? 3000);
 
