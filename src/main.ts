@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppConfigService } from './configs/app-config.service';
+import { AllExceptionFilter } from '@shared/filters/all-exception.filter';
+import { ValidationError } from 'class-validator';
+import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
 
 async function bootstrap() {
   const logger = new Logger('Bootstrap');
@@ -20,8 +23,23 @@ async function bootstrap() {
       transformOptions: {
         enableImplicitConversion: true,
       },
+      exceptionFactory: (errors: ValidationError[]) => {
+        const messages = errors.flatMap((error) => {
+          if (error.constraints) {
+            return Object.values(error.constraints);
+          }
+          return [];
+        });
+
+        return ErrorResponseFactory.badRequest({
+          message: messages,
+          error: 'Validation Failed',
+        });
+      },
     }),
   );
+  const httpAdapter = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionFilter(httpAdapter));
 
   await app.listen(port ?? 3000);
 

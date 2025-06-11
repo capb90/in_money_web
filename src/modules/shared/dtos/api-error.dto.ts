@@ -1,15 +1,18 @@
-import { IApiErrors } from '../interfaces/api-response.interfaces';
+export interface IApiErrors {
+  messages: string[];
+  statusCode: number;
+}
 
 export class ApiErrorDto implements IApiErrors {
-  message: string[];
+  messages: string[];
   statusCode: number;
 
   constructor(message: string[] | string, statusCode: number) {
     this.statusCode = statusCode;
     if (Array.isArray(message)) {
-      this.message = message;
+      this.messages = message;
     } else {
-      this.message = [message];
+      this.messages = [message];
     }
   }
 }

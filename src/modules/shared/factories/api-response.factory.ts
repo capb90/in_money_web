@@ -1,11 +1,9 @@
-import {
-  IApiErrors,
-  IApiResponseDto,
-} from '../interfaces/api-response.interfaces';
+import { IApiResponseDto } from '../interfaces/api-response.interfaces';
 import {
   ApiErrorResponseDto,
   ApiSuccessResponseDto,
 } from '../dtos/api-response.dto';
+import { IApiErrors } from '@shared/dtos/api-error.dto';
 
 export class ApiResponseFactory {
   static success<T>(
@@ -25,14 +23,9 @@ export class ApiResponseFactory {
   static error(
     errors: IApiErrors,
     options?: {
-      message?: string;
       meta?: Record<string, unknown> | null;
     },
   ): IApiResponseDto<null> {
-    return new ApiErrorResponseDto(
-      errors,
-      options?.message || 'Error',
-      options?.meta,
-    );
+    return new ApiErrorResponseDto(errors, options?.meta);
   }
 }

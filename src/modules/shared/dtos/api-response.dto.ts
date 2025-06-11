@@ -1,11 +1,9 @@
-import {
-  IApiErrors,
-  IApiResponseDto,
-} from '../interfaces/api-response.interfaces';
+import { IApiResponseDto } from '../interfaces/api-response.interfaces';
+import { IApiErrors } from '@shared/dtos/api-error.dto';
 
 export class ApiSuccessResponseDto<T> implements IApiResponseDto<T> {
   public data: T;
-  public errors: IApiErrors | null = null;
+  public errors: null = null;
   public message: string;
   public meta: Record<string, unknown> | null;
   public success: boolean = true;
@@ -24,17 +22,12 @@ export class ApiSuccessResponseDto<T> implements IApiResponseDto<T> {
 export class ApiErrorResponseDto implements IApiResponseDto<null> {
   public data: null = null;
   public errors: IApiErrors;
-  public message: string;
+  public message: string | null = null;
   public meta: Record<string, unknown> | null;
   public success: boolean = false;
 
-  constructor(
-    errors: IApiErrors,
-    message: string = 'Error',
-    meta: Record<string, unknown> | null = null,
-  ) {
+  constructor(errors: IApiErrors, meta: Record<string, unknown> | null = null) {
     this.errors = errors;
-    this.message = message;
     this.meta = meta;
   }
 }
