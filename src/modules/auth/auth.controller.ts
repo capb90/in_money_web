@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { UsersService } from '@users/services/users.service';
 import { CreateUserDto } from '@users/dtos/create-user.dto';
 import { IApiResponseDto } from '@shared/interfaces/api-response.interfaces';
@@ -10,6 +10,7 @@ export class AuthController {
   constructor(private readonly userService: UsersService) {}
 
   @Post('register')
+  @HttpCode(HttpStatus.CREATED)
   async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<IApiResponseDto<UserResponseDto>> {
