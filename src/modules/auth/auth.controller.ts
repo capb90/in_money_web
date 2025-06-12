@@ -4,12 +4,15 @@ import { CreateUserDto } from '@users/dtos/create-user.dto';
 import { IApiResponseDto } from '@shared/interfaces/api-response.interfaces';
 import { UserResponseDto } from '@users/dtos/user-response.dto';
 import { ApiResponseFactory } from '@shared/factories/api-response.factory';
+import { AuthControllerDocs, RegisterDocs } from './swagger/auth.swagger';
 
+@AuthControllerDocs()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly userService: UsersService) {}
 
   @Post('register')
+  @RegisterDocs()
   @HttpCode(HttpStatus.CREATED)
   async createUser(
     @Body() createUserDto: CreateUserDto,

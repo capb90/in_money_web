@@ -1,20 +1,14 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { AppConfigService } from './configs/app-config.service';
 import { AllExceptionFilter } from '@shared/filters/all-exception.filter';
 import { ValidationError } from 'class-validator';
 import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-async function bootstrap() {
-  const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule);
-
-  const configService = app.get(AppConfigService);
-  const port = configService.port;
-  app.setGlobalPrefix(configService.apiPrefix);
-
+function setupGlobalPipes(app: INestApplication) {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -38,15 +32,72 @@ async function bootstrap() {
       },
     }),
   );
+}
+
+function setupGlobalFilters(
+  app: INestApplication,
+  configService: AppConfigService,
+) {
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionFilter(httpAdapter, configService));
+}
 
-  await app.listen(port ?? 3000);
+function setupSwagger(app: INestApplication) {
+  const config = new DocumentBuilder()
+    .setTitle('API In-money')
+    .setDescription('Documentación de la API con Swagger')
+    .setVersion('1.0')
+    .build();
 
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
+}
+
+function logApplicationStart(
+  logger: Logger,
+  port: number,
+  configService: AppConfigService,
+) {
   logger.log(
     `🚀 Application running on: http://localhost:${port}/${configService.apiPrefix}`,
   );
   logger.log(`📚 Environment: ${configService.nodeEnv}`);
+  logger.log(`📖 API Documentation: http://localhost:${port}/api/docs`);
 }
+
+async function bootstrap() {
+  const logger = new Logger('Bootstrap');
+
+  try {
+    const app = await NestFactory.create(AppModule);
+    const configService = app.get(AppConfigService);
+    const port = configService.port ?? 3000;
+
+    app.setGlobalPrefix(configService.apiPrefix);
+
+    setupGlobalPipes(app);
+    setupGlobalFilters(app, configService);
+    setupSwagger(app);
+
+    await app.listen(port);
+
+    logApplicationStart(logger, port, configService);
+  } catch (error) {
+    logger.error('Error starting application:', error);
+    process.exit(1);
+  }
+}
+
+process.on('unhandledRejection', (reason, promise) => {
+  const logger = new Logger('UnhandledRejection');
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
+
+process.on('uncaughtException', (error) => {
+  const logger = new Logger('UncaughtException');
+  logger.error('Uncaught Exception thrown:', error);
+  process.exit(1);
+});
 
 bootstrap();

@@ -1,10 +1,15 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 export interface IApiErrors {
   messages: string[];
   statusCode: number;
 }
 
 export class ApiErrorDto implements IApiErrors {
+  @ApiProperty()
   messages: string[];
+
+  @ApiProperty()
   statusCode: number;
 
   constructor(message: string[] | string, statusCode: number) {
