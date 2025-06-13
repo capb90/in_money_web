@@ -8,28 +8,46 @@ import {
 } from 'class-validator';
 import { Transform, TransformFnParams } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { i18nValidationMessage } from 'nestjs-i18n';
 
 export class CreateUserDto {
   @ApiProperty()
-  @IsString({ message: 'El nombre debe ser un cadena de texto.' })
-  @IsNotEmpty({ message: 'El nombre es obligatorio' })
-  @MinLength(2, { message: 'El nombre debe tener al menos 2 caracteres' })
-  @MaxLength(50, { message: 'El nombre no puede exceder 50 caracteres' })
+  @IsString({ message: i18nValidationMessage('validation.user.name.IsString') })
+  @IsNotEmpty({
+    message: i18nValidationMessage('validation.user.name.IsNotEmpty'),
+  })
+  @MinLength(2, {
+    message: i18nValidationMessage('validation.user.name.MinLength'),
+  })
+  @MaxLength(50, {
+    message: i18nValidationMessage('validation.user.name.MaxLength'),
+  })
   @Transform(({ value }: TransformFnParams): string => value?.trim())
-  name: string;
+  public name: string;
 
   @ApiProperty()
-  @IsEmail({}, { message: 'Debe proporcionar un email válido' })
-  @IsNotEmpty({ message: 'El email es obligatorio' })
-  @MaxLength(100, { message: 'El email no puede exceder 100 caracteres' })
+  @IsEmail(
+    {},
+    { message: i18nValidationMessage('validation.user.email.IsEmail') },
+  )
+  @IsNotEmpty({
+    message: i18nValidationMessage('validation.user.email.IsNotEmpty'),
+  })
+  @MaxLength(100, {
+    message: i18nValidationMessage('validation.user.email.MaxLength'),
+  })
   @Transform(({ value }: TransformFnParams): string =>
     value?.toLowerCase().trim(),
   )
-  email: string;
+  public email: string;
 
   @ApiProperty()
-  @IsString({ message: 'La contraseña debe ser una cadena de texto' })
-  @IsNotEmpty({ message: 'La contraseña es obligatoria' })
+  @IsString({
+    message: i18nValidationMessage('validation.user.password.IsString'),
+  })
+  @IsNotEmpty({
+    message: i18nValidationMessage('validation.user.password.IsNotEmpty'),
+  })
   @IsStrongPassword(
     {
       minLength: 8,
@@ -39,9 +57,10 @@ export class CreateUserDto {
       minSymbols: 1,
     },
     {
-      message:
-        'La contraseña debe contener al menos: 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 símbolo',
+      message: i18nValidationMessage(
+        'validation.user.password.IsStrongPassword',
+      ),
     },
   )
-  password: string;
+  public password: string;
 }

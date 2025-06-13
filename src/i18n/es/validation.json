@@ -1,6 +1,26 @@
 {
-  "NOT_EMPTY": "Este campo es obligatorio",
-  "INVALID_EMAIL": "Debe ser un email válido",
-  "MIN_LENGTH": "Debe tener al menos {min} caracteres",
-  "MAX_LENGTH": "No puede tener más de {max} caracteres"
+  "IsString": "{{property}} debe ser una cadena de texto",
+  "IsNotEmpty": "{{property}} es obligatorio",
+  "MinLength": "{{property}} debe tener al menos {{min}} caracteres",
+  "MaxLength": "{{property}} no puede exceder {{max}} caracteres",
+  "IsEmail": "Debe proporcionar un email válido",
+  "IsStrongPassword": "La contraseña debe contener al menos: 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 símbolo",
+  "user": {
+    "name": {
+      "IsString": "El nombre debe ser una cadena de texto",
+      "IsNotEmpty": "El nombre es obligatorio",
+      "MinLength": "El nombre debe tener al menos {{min}} caracteres",
+      "MaxLength": "El nombre no puede exceder {{max}} caracteres"
+    },
+    "email": {
+      "IsEmail": "Debe proporcionar un email válido",
+      "IsNotEmpty": "El email es obligatorio",
+      "MaxLength": "El email no puede exceder {{max}} caracteres"
+    },
+    "password": {
+      "IsString": "La contraseña debe ser una cadena de texto",
+      "IsNotEmpty": "La contraseña es obligatoria",
+      "IsStrongPassword": "La contraseña debe contener al menos: 8 caracteres, 1 mayúscula, 1 minúscula, 1 número y 1 símbolo"
+    }
+  }
 }

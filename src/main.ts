@@ -1,23 +1,39 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
+import { INestApplication, Logger, ValidationError } from '@nestjs/common';
 import { AppConfigService } from './configs/app-config.service';
 import { AllExceptionFilter } from '@shared/filters/all-exception.filter';
-import { ValidationError } from 'class-validator';
-import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
+import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
+import { HttpAppExceptionFilter } from '@shared/filters/http-app-exception.filter';
+import { HttpExceptionFilter } from '@shared/filters/http-exception.filter';
 
 function setupGlobalPipes(app: INestApplication) {
   app.useGlobalPipes(
-    new ValidationPipe({
+    new I18nValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
       transformOptions: {
         enableImplicitConversion: true,
       },
-      exceptionFactory: (errors: ValidationError[]) => {
+    }),
+  );
+}
+
+function setupGlobalFilters(
+  app: INestApplication,
+  configService: AppConfigService,
+) {
+  const httpAdapter = app.get(HttpAdapterHost);
+  app.useGlobalFilters(
+    new AllExceptionFilter(httpAdapter, configService),
+    new HttpExceptionFilter(httpAdapter),
+    new HttpAppExceptionFilter(httpAdapter),
+    new I18nValidationExceptionFilter({
+      errorFormatter(errors: ValidationError[]) {
         const messages = errors.flatMap((error) => {
           if (error.constraints) {
             return Object.values(error.constraints);
@@ -32,14 +48,6 @@ function setupGlobalPipes(app: INestApplication) {
       },
     }),
   );
-}
-
-function setupGlobalFilters(
-  app: INestApplication,
-  configService: AppConfigService,
-) {
-  const httpAdapter = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new AllExceptionFilter(httpAdapter, configService));
 }
 
 function setupSwagger(app: INestApplication) {

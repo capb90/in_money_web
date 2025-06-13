@@ -2,24 +2,20 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  HttpException,
   HttpStatus,
-  Logger,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import {
   ErrorResponseFactory,
   HttpAppException,
 } from '@shared/factories/error-response.factory';
-import { ApiResponseFactory } from '@shared/factories/api-response.factory';
 import { IApiErrors } from '@shared/dtos/api-error.dto';
 import { Request } from 'express';
 import { AppConfigService } from '../../../configs/app-config.service';
+import { BaseFilter } from '@shared/filters/base.filter';
 
 @Catch()
-export class AllExceptionFilter implements ExceptionFilter {
-  private readonly logger = new Logger(AllExceptionFilter.name);
-
+export class AllExceptionFilter extends BaseFilter implements ExceptionFilter {
   private get isProduction(): boolean {
     return this.configService.nodeEnv === 'production';
   }
@@ -27,7 +23,9 @@ export class AllExceptionFilter implements ExceptionFilter {
   constructor(
     private readonly httpAdapterHost: HttpAdapterHost,
     private readonly configService: AppConfigService,
-  ) {}
+  ) {
+    super(AllExceptionFilter.name);
+  }
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
@@ -36,76 +34,32 @@ export class AllExceptionFilter implements ExceptionFilter {
 
     this.logError(exception, request);
 
-    let httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-    let responseBody: HttpAppException;
-
-    if (exception instanceof HttpAppException) {
-      responseBody = exception;
-    } else if (exception instanceof HttpException) {
-      httpStatus = exception.getStatus();
-      const exceptionRepose = exception.getResponse();
-      let message: string | string[] = exception.message;
-
-      if (typeof exceptionRepose === 'object' && exceptionRepose !== null) {
-        if ('message' in exceptionRepose) {
-          message = exceptionRepose['message'] as string[] | string;
-        }
-      } else {
-        message = exceptionRepose;
-      }
-
-      responseBody = new HttpAppException(httpStatus, {
-        message: message,
-        error: exception,
-      });
-    } else if (exception instanceof Error) {
-      responseBody = ErrorResponseFactory.internalServerError({
-        message: this.isProduction
-          ? 'Internal Server Error'
-          : exception.message,
-        error: this.isProduction ? undefined : exception,
-      });
-    } else {
-      responseBody = ErrorResponseFactory.internalServerError({
-        message: 'Internal Server Error',
-        error: this.isProduction ? undefined : exception,
-      });
-    }
-
-    const errorBody = ApiResponseFactory.error(
-      responseBody.getResponse() as IApiErrors,
-      {
-        meta: {
-          timestamp: new Date().toISOString(),
-          path: request.url,
-          method: request.method,
-          cause: responseBody?.cause || 'Not specified',
-          ...(this.isProduction
-            ? {}
-            : { stack: this.getStackTrace(exception) }),
-        },
-      },
+    const errorTransform: HttpAppException = this.createErrorResponse(
+      exception,
+      this.isProduction,
     );
 
-    httpAdapter.reply(ctx.getResponse(), errorBody, responseBody.getStatus());
+    const errorBody = this.getResponse(
+      errorTransform.getResponse() as IApiErrors,
+      request,
+    );
+
+    httpAdapter.reply(
+      ctx.getResponse(),
+      errorBody,
+      HttpStatus.INTERNAL_SERVER_ERROR,
+    );
   }
 
-  private logError(exception: unknown, request: Request): void {
+  private createErrorResponse(exception: unknown, isProduction: boolean) {
     const message =
-      exception instanceof Error ? exception.message : 'Unknown Error';
-    const stack = exception instanceof Error ? exception.stack : undefined;
+      exception instanceof Error && !isProduction
+        ? exception.message
+        : 'Internal Server Error';
 
-    this.logger.error(
-      `${request.method} ${request.url}-${message}`,
-      stack,
-      AllExceptionFilter.name,
-    );
-  }
-
-  private getStackTrace(exception: unknown): string | undefined {
-    if (exception instanceof Error) {
-      return exception.stack;
-    }
-    return undefined;
+    return ErrorResponseFactory.internalServerError({
+      message,
+      error: isProduction ? undefined : exception,
+    });
   }
 }

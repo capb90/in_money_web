@@ -1,6 +1,26 @@
 {
-  "NOT_EMPTY": "This field is required",
-  "INVALID_EMAIL": "Must be a valid email",
-  "MIN_LENGTH": "Must be at least {min} characters",
-  "MAX_LENGTH": "Cannot be more than {max} characters"
+  "IsString": "{{property}} must be a string",
+  "IsNotEmpty": "{{property}} is required",
+  "MinLength": "{{property}} must be at least {{min}} characters long",
+  "MaxLength": "{{property}} cannot exceed {{max}} characters",
+  "IsEmail": "Must provide a valid email",
+  "IsStrongPassword": "Password must contain at least: 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 symbol",
+  "user": {
+    "name": {
+      "IsString": "Name must be a string",
+      "IsNotEmpty": "Name is required",
+      "MinLength": "Name must be at least {{min}} characters long",
+      "MaxLength": "Name cannot exceed {{max}} characters"
+    },
+    "email": {
+      "IsEmail": "Must provide a valid email",
+      "IsNotEmpty": "Email is required",
+      "MaxLength": "Email cannot exceed {{max}} characters"
+    },
+    "password": {
+      "IsString": "Password must be a string",
+      "IsNotEmpty": "Password is required",
+      "IsStrongPassword": "Password must contain at least: 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 symbol"
+    }
+  }
 }
