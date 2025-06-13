@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { INestApplication, Logger, ValidationError } from '@nestjs/common';
+import { INestApplication, Logger } from '@nestjs/common';
 import { AppConfigService } from './configs/app-config.service';
 import { AllExceptionFilter } from '@shared/filters/all-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n';
-import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
+import { I18nValidationPipe } from 'nestjs-i18n';
 import { HttpAppExceptionFilter } from '@shared/filters/http-app-exception.filter';
 import { HttpExceptionFilter } from '@shared/filters/http-exception.filter';
+import { I18nExceptionFilter } from '@shared/filters/i18n-exception.filter';
 
 function setupGlobalPipes(app: INestApplication) {
   app.useGlobalPipes(
@@ -32,21 +32,7 @@ function setupGlobalFilters(
     new AllExceptionFilter(httpAdapter, configService),
     new HttpExceptionFilter(httpAdapter),
     new HttpAppExceptionFilter(httpAdapter),
-    new I18nValidationExceptionFilter({
-      errorFormatter(errors: ValidationError[]) {
-        const messages = errors.flatMap((error) => {
-          if (error.constraints) {
-            return Object.values(error.constraints);
-          }
-          return [];
-        });
-
-        return ErrorResponseFactory.badRequest({
-          message: messages,
-          error: 'Validation Failed',
-        });
-      },
-    }),
+    new I18nExceptionFilter(httpAdapter),
   );
 }
 

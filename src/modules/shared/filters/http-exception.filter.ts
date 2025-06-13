@@ -3,7 +3,6 @@ import {
   Catch,
   ExceptionFilter,
   HttpException,
-  HttpStatus,
 } from '@nestjs/common';
 import { BaseFilter } from '@shared/filters/base.filter';
 import { HttpAdapterHost } from '@nestjs/core';
@@ -41,6 +40,7 @@ export class HttpExceptionFilter extends BaseFilter implements ExceptionFilter {
     const errorBody = this.getResponse(
       errorTransform.getResponse() as IApiErrors,
       request,
+      errorTransform.cause,
     );
 
     httpAdapter.reply(ctx.getResponse(), errorBody, exception.getStatus());

@@ -42,6 +42,7 @@ export class AllExceptionFilter extends BaseFilter implements ExceptionFilter {
     const errorBody = this.getResponse(
       errorTransform.getResponse() as IApiErrors,
       request,
+      errorTransform.cause,
     );
 
     httpAdapter.reply(

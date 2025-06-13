@@ -23,6 +23,7 @@ export class HttpAppExceptionFilter
     const errorBody = this.getResponse(
       exception.getResponse() as IApiErrors,
       request,
+      exception.cause,
     );
 
     httpAdapter.reply(ctx.getResponse(), errorBody, exception.getStatus());

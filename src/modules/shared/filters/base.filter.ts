@@ -31,12 +31,18 @@ export class BaseFilter {
     return undefined;
   }
 
-  public getResponse(resBody: IApiErrors, request: Request) {
+  public getResponse(resBody: IApiErrors, request: Request, cause: unknown) {
+    //todo: Add Observability
+    this.logger.error('Cause', cause || 'Not specified', this.className);
+
     return ApiResponseFactory.error(resBody, {
       meta: {
         timestamp: new Date().toISOString(),
         path: request.url,
         method: request.method,
+        /* cause: responseBody?.cause || 'Not specified',
+        // Agregar más metadatos útiles si es necesario
+        ...(this.isProduction() ? {} : { stack: this.getStackTrace(exception) }),*/
       },
     });
   }
