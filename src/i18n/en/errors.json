@@ -1,4 +1,9 @@
 {
+  "internalServer": "Internal Server Error",
+  "resourceAlreadyExists": "A record with this unique value already exists",
+  "requiredFieldsMissing": "Required fields are missing",
+  "invalidReference": "Cannot delete or update because there are existing relationships",
+  "serviceTemporarilyUnavailable": "Service temporarily unavailable",
   "auth": {
     "EMAIL_EXIST": "Email already exists"
   }

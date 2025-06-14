@@ -5,11 +5,15 @@ import { IApiResponseDto } from '@shared/interfaces/api-response.interfaces';
 import { UserResponseDto } from '@users/dtos/user-response.dto';
 import { ApiResponseFactory } from '@shared/factories/api-response.factory';
 import { AuthControllerDocs, RegisterDocs } from './swagger/auth.swagger';
+import { I18nAppService } from '@app/configs';
 
 @AuthControllerDocs()
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly userService: UsersService) {}
+  constructor(
+    private readonly userService: UsersService,
+    private readonly i18Service: I18nAppService,
+  ) {}
 
   @Post('register')
   @RegisterDocs()
@@ -20,7 +24,7 @@ export class AuthController {
     const userResponse = await this.userService.createUser(createUserDto);
 
     return ApiResponseFactory.success(userResponse, {
-      message: 'Usuario agregado a la base de datos',
+      message: await this.i18Service.translate('responses.user.Register'),
     });
   }
 }

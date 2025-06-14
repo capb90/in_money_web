@@ -9,6 +9,8 @@ import { I18nValidationPipe } from 'nestjs-i18n';
 import { HttpAppExceptionFilter } from '@shared/filters/http-app-exception.filter';
 import { HttpExceptionFilter } from '@shared/filters/http-exception.filter';
 import { I18nExceptionFilter } from '@shared/filters/i18n-exception.filter';
+import { I18nAppService } from '@app/configs';
+import { DatabaseExceptionFilter } from '@shared/filters/database-exception.filter';
 
 function setupGlobalPipes(app: INestApplication) {
   app.useGlobalPipes(
@@ -28,8 +30,10 @@ function setupGlobalFilters(
   configService: AppConfigService,
 ) {
   const httpAdapter = app.get(HttpAdapterHost);
+  const i18n = app.get(I18nAppService);
   app.useGlobalFilters(
     new AllExceptionFilter(httpAdapter, configService),
+    new DatabaseExceptionFilter(httpAdapter, i18n),
     new HttpExceptionFilter(httpAdapter),
     new HttpAppExceptionFilter(httpAdapter),
     new I18nExceptionFilter(httpAdapter),

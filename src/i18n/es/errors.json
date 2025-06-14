@@ -1,4 +1,9 @@
 {
+  "internalServer": "Error Interno del Servidor",
+  "resourceAlreadyExists": "Ya existe un registro con ese valor único",
+  "requiredFieldsMissing": "Faltan campos requeridos",
+  "invalidReference": "No se puede eliminar o actualizar porque hay relaciones existentes",
+  "serviceTemporarilyUnavailable": "Servicio temporalmente no disponible",
   "auth": {
     "EMAIL_EXIST": "El E-mail ya se encuentra registrado"
   }
