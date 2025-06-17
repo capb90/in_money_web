@@ -47,7 +47,10 @@ export class AppConfigService {
 
   get jwt() {
     return {
-      SEED: this.configService.get<string>('JWT_SEED') as string,
+      SECRET: this.configService.get<string>('JWT_SECRET') as string,
+      JWT_EXPIRES_IN: this.configService.get<string>(
+        'JWT_EXPIRES_IN',
+      ) as string,
     };
   }
 

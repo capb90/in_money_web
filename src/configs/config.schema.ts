@@ -14,7 +14,8 @@ export const configValidationSchema = Joi.object({
     .default('localhost')
     .description('Database port'),
   DATABASE_PASSWORD: Joi.string().required().description('Database password'),
-  JWT_SEED: Joi.string().min(32).required().description('JWT secret key'),
+  JWT_SECRET: Joi.string().min(32).required().description('JWT secret key'),
+  JWT_EXPIRES_IN: Joi.string().default('15m').description('JWT expires'),
   MAILER_SERVICE: Joi.string().default('gmail').description('Service mailer'),
   MAILER_EMAIL: Joi.string().required().description('Email service send'),
   MAILER_SECRET_KEY: Joi.string().required().description('Email secret key'),
