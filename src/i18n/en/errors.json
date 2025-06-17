@@ -5,6 +5,8 @@
   "invalidReference": "Cannot delete or update because there are existing relationships",
   "serviceTemporarilyUnavailable": "Service temporarily unavailable",
   "auth": {
-    "EMAIL_EXIST": "Email already exists"
+    "emailAlreadyExist": "Email already exists",
+    "emailNotExist": "E-mail is not registered",
+    "invalidCredentials" : "Credentials provided are invalid"
   }
 }

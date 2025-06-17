@@ -5,6 +5,8 @@
   "invalidReference": "No se puede eliminar o actualizar porque hay relaciones existentes",
   "serviceTemporarilyUnavailable": "Servicio temporalmente no disponible",
   "auth": {
-    "EMAIL_EXIST": "El E-mail ya se encuentra registrado"
+    "emailAlreadyExist": "El E-mail ya se encuentra registrado",
+    "emailNotExist": "El E-mail no se encuentra registrado",
+    "invalidCredentials" : "Las credenciales proporcionadas son invalidas"
   }
 }

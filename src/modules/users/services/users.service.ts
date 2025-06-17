@@ -6,6 +6,7 @@ import { UserResponseDto } from '@users/dtos/user-response.dto';
 import { transformToDto } from '@shared/utils/transform-to-dto.util';
 import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
 import { I18nAppService } from '@app/configs';
+import { LoginUserDto } from '@users/dtos/login-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,9 @@ export class UsersService {
   public async createUser(body: CreateUserDto): Promise<UserResponseDto> {
     const userExists = await this.repository.findByEmail(body.email);
     if (userExists) {
-      const message = await this.i18n.translate('errors.auth.EMAIL_EXIST');
+      const message = await this.i18n.translate(
+        'errors.auth.emailAlreadyExist',
+      );
       throw ErrorResponseFactory.badRequest({
         message,
       });
@@ -31,5 +34,33 @@ export class UsersService {
       password: passwordEncrypt,
     });
     return transformToDto(UserResponseDto, userDb);
+  }
+
+  public async validateUser(body: LoginUserDto): Promise<UserResponseDto> {
+    const userExists = await this.repository.findByEmail(body.email);
+    if (!userExists) {
+      const message = await this.i18n.translate(
+        'errors.auth.invalidCredentials',
+      );
+      throw ErrorResponseFactory.badRequest({
+        message,
+      });
+    }
+
+    const isPasswordMatch = await this.bcryptService.compare(
+      body.password,
+      userExists.password,
+    );
+
+    if (!isPasswordMatch) {
+      const message = await this.i18n.translate(
+        'errors.auth.invalidCredentials',
+      );
+      throw ErrorResponseFactory.badRequest({
+        message,
+      });
+    }
+
+    return transformToDto(UserResponseDto, userExists);
   }
 }

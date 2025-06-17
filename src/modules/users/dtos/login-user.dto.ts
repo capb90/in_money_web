@@ -1,20 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsValidEmail,
-  IsValidName,
   IsValidPassword,
 } from '@users/decorators/validations.decorators';
 
-export class CreateUserDto {
-  @ApiProperty()
-  @IsValidName()
-  public name: string;
-
+export class LoginUserDto {
   @ApiProperty()
   @IsValidEmail()
   public email: string;
 
   @ApiProperty()
-  @IsValidPassword()
+  @IsValidPassword(() => false)
   public password: string;
 }
