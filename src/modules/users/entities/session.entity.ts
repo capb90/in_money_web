@@ -21,6 +21,9 @@ export class Session {
   })
   public refreshTokenHash: string;
 
+  @Column({ name: 'device_info', type: 'varchar', nullable: true })
+  public deviceInfo: string | null;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   public createdAt: Date;
 
