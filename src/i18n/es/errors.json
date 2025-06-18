@@ -7,6 +7,7 @@
   "auth": {
     "emailAlreadyExist": "El E-mail ya se encuentra registrado",
     "emailNotExist": "El E-mail no se encuentra registrado",
-    "invalidCredentials" : "Las credenciales proporcionadas son invalidas"
+    "invalidCredentials" : "Las credenciales proporcionadas son invalidas",
+    "unauthorized": "Usuario no autorizado"
   }
 }

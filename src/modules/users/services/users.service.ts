@@ -36,7 +36,7 @@ export class UsersService {
     return transformToDto(UserResponseDto, userDb);
   }
 
-  public async validateUser(body: LoginUserDto): Promise<UserResponseDto> {
+  public async validateUserLogin(body: LoginUserDto): Promise<UserResponseDto> {
     const userExists = await this.repository.findByEmail(body.email);
     if (!userExists) {
       const message = await this.i18n.translate(
@@ -49,7 +49,7 @@ export class UsersService {
 
     const isPasswordMatch = await this.bcryptService.compare(
       body.password,
-      userExists.password,
+      userExists.password as string,
     );
 
     if (!isPasswordMatch) {
@@ -62,5 +62,10 @@ export class UsersService {
     }
 
     return transformToDto(UserResponseDto, userExists);
+  }
+
+  public async validateUserById(id: string): Promise<UserResponseDto> {
+    const userDb = await this.repository.findById(id);
+    return transformToDto(UserResponseDto, userDb);
   }
 }

@@ -20,4 +20,8 @@ export class TypeOrmUsersRepository implements IUserRepository {
   public async findByEmail(email: string): Promise<User | null> {
     return this.userRepository.findOne({ where: { email } });
   }
+
+  public async findById(id: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id } });
+  }
 }

@@ -7,6 +7,7 @@
   "auth": {
     "emailAlreadyExist": "Email already exists",
     "emailNotExist": "E-mail is not registered",
-    "invalidCredentials" : "Credentials provided are invalid"
+    "invalidCredentials" : "Credentials provided are invalid",
+    "unauthorized": "User Unauthorized"
   }
 }
