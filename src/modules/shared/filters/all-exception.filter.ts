@@ -11,7 +11,7 @@ import {
 } from '@shared/factories/error-response.factory';
 import { IApiErrors } from '@shared/dtos/api-error.dto';
 import { Request } from 'express';
-import { AppConfigService } from '../../../configs/app-config.service';
+import { AppConfigService } from '@app/configs';
 import { BaseFilter } from '@shared/filters/base.filter';
 
 @Catch()

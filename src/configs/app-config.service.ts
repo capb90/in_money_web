@@ -54,6 +54,17 @@ export class AppConfigService {
     };
   }
 
+  get jwtRefreshToken() {
+    return {
+      REFRESH_SECRET: this.configService.get<string>(
+        'JWT_REFRESH_SECRET',
+      ) as string,
+      EXPIRES_IN: this.configService.get<string>(
+        'JWT_REFRESH_EXPIRES_IN',
+      ) as string,
+    };
+  }
+
   get redis() {
     return {
       URL: this.configService.get<string>('REDIS_URL') as string,

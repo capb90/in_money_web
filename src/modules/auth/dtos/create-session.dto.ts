@@ -5,6 +5,11 @@ export class CreateSessionDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
+  public id: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   public refreshTokenHash: string;
 
   @ApiProperty()

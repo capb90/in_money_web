@@ -4,13 +4,13 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { User } from '@users/entities/user.entity';
 
 @Entity('session')
 export class Session {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryColumn('uuid')
   public id: string;
 
   @Column({

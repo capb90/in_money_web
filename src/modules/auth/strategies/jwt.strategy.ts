@@ -4,12 +4,7 @@ import { AppConfigService, I18nAppService } from '@app/configs';
 import { UsersService } from '@users/services/users.service';
 import { UserResponseDto } from '@users/dtos/user-response.dto';
 import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
-
-export interface IJwtPayload {
-  sub: string;
-  sessionId: string;
-  tokenVersion: number;
-}
+import { IJwtPayload } from '../interfaces/jwt-payload.interface';
 
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
