@@ -6,7 +6,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from '../dtos/create-user.dto';
 
 @Injectable()
-export class TypeOrmUsersRepository implements IUserRepository {
+export class UsersRepository implements IUserRepository {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,

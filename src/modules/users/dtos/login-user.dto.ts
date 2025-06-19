@@ -3,6 +3,7 @@ import {
   IsValidEmail,
   IsValidPassword,
 } from '@users/decorators/validations.decorators';
+import { IsOptional, IsString } from 'class-validator';
 
 export class LoginUserDto {
   @ApiProperty()
@@ -12,4 +13,8 @@ export class LoginUserDto {
   @ApiProperty()
   @IsValidPassword(() => false)
   public password: string;
+
+  @IsOptional()
+  @IsString()
+  deviceInfo?: string;
 }

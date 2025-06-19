@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { AuthTypes } from '../interfaces/auth-types.enum';
-import { Session } from './session.entity';
+import { Session } from '../../auth/entities/session.entity';
 
 @Entity('user')
 @Index(['email'], { unique: true })

@@ -3,9 +3,9 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { UsersService } from './services/users.service';
-import { TypeOrmUsersRepository } from './repositories/typeorm-users.repository';
+import { UsersRepository } from './repositories/users.repository';
 import { SharedModule } from '@shared/shared.module';
-import { Session } from './entities/session.entity';
+import { Session } from '../auth/entities/session.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Session]), SharedModule],
@@ -14,7 +14,7 @@ import { Session } from './entities/session.entity';
     UsersService,
     {
       provide: 'IUserRepository',
-      useClass: TypeOrmUsersRepository,
+      useClass: UsersRepository,
     },
   ],
   exports: [UsersService],

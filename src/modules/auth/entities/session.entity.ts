@@ -27,8 +27,8 @@ export class Session {
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   public createdAt: Date;
 
-  @Column({ name: 'revoke_at', type: 'timestamp', nullable: true })
-  public revokeAt: Date | null;
+  @Column({ name: 'revoke_at', type: 'timestamp' })
+  public revokeAt: Date;
 
   //Relations:
   @ManyToOne(() => User, (user) => user.sessions, { onDelete: 'CASCADE' })
