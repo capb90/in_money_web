@@ -5,7 +5,9 @@ import { UsersService } from '@users/application/services/users.service';
 import { UserResponseDto } from '@users/application/dtos/user-response.dto';
 import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
 import { IJwtPayload } from '@auth/domain/interfaces/jwt-payload.interface';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: AppConfigService,

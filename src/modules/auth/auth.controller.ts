@@ -43,6 +43,7 @@ export class AuthController {
   }
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   public async login(
     @Body() userCredentials: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
