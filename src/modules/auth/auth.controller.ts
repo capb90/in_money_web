@@ -1,30 +1,63 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { UsersService } from '@users/services/users.service';
-import { CreateUserDto } from '@users/dtos/create-user.dto';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+} from '@nestjs/common';
+import { UsersService } from '@users/application/services/users.service';
+import { CreateUserDto } from '@users/application/dtos/create-user.dto';
 import { IApiResponseDto } from '@shared/interfaces/api-response.interfaces';
-import { UserResponseDto } from '@users/dtos/user-response.dto';
+import { UserResponseDto } from '@users/application/dtos/user-response.dto';
 import { ApiResponseFactory } from '@shared/factories/api-response.factory';
-import { AuthControllerDocs, RegisterDocs } from './swagger/auth.swagger';
+import {
+  AuthControllerDocs,
+  RegisterDocs,
+} from '@auth/infrastructure/swagger/auth.swagger';
 import { I18nAppService } from '@app/configs';
+import { LoginUserDto } from '@users/application/dtos/login-user.dto';
+import { AuthService } from '@auth/application/services/auth.service';
+import { Response } from 'express';
 
 @AuthControllerDocs()
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly userService: UsersService,
+    private readonly authService: AuthService,
     private readonly i18Service: I18nAppService,
   ) {}
 
   @Post('register')
   @RegisterDocs()
   @HttpCode(HttpStatus.CREATED)
-  async createUser(
+  public async createUser(
     @Body() createUserDto: CreateUserDto,
   ): Promise<IApiResponseDto<UserResponseDto>> {
     const userResponse = await this.userService.createUser(createUserDto);
 
     return ApiResponseFactory.success(userResponse, {
       message: await this.i18Service.translate('responses.user.Register'),
+    });
+  }
+
+  @Post('login')
+  public async login(
+    @Body() userCredentials: LoginUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const userDto = await this.userService.validateUserLogin(userCredentials);
+    const { tokens, session } =
+      await this.authService.generateTokenAndSession(userDto);
+
+    this.authService.setTokenCookie(res, tokens.refreshToken);
+
+    return ApiResponseFactory.success(userDto, {
+      meta: {
+        accessToken: tokens.accessToken,
+        sessionId: session.id,
+      },
     });
   }
 }

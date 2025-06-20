@@ -2,7 +2,7 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { INestApplication, Logger } from '@nestjs/common';
-import { AppConfigService } from './configs/app-config.service';
+import { AppConfigService } from '@app/configs';
 import { AllExceptionFilter } from '@shared/filters/all-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { I18nValidationPipe } from 'nestjs-i18n';

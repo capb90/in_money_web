@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { UsersModule } from '@users/users.module';
-import { SessionRepository } from './repositories/session.repository';
-import { AuthService } from './services/auth.service';
-import { Session } from './entities/session.entity';
+import { SessionRepository } from '@auth/infrastructure/repositories/session.repository';
+import { AuthService } from '@auth/application/services/auth.service';
+import { Session } from '@auth/domain/entities/session.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SharedModule } from '@shared/shared.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { jwtConfig } from '@auth/configs/jwt.configs';
+import { jwtConfig } from '@auth/infrastructure/configs/jwt.configs';
 import { AppConfigService, AppConfigsModule } from '@app/configs';
-import { JwtStrategy } from '@auth/strategies/jwt.strategy';
+import { JwtStrategy } from '@auth/infrastructure/strategies/jwt.strategy';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { JwtStrategy } from '@auth/strategies/jwt.strategy';
     AuthService,
     JwtStrategy,
     {
-      provide: 'ISessionRepository',
+      provide: 'SessionRepositoryInterface',
       useClass: SessionRepository,
     },
   ],
