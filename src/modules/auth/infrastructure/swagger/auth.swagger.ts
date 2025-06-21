@@ -23,3 +23,16 @@ export function RegisterDocs() {
     ApiErrorResponseData(HttpStatus.BAD_REQUEST, 'User already exists'),
   );
 }
+
+export function LoginDocs() {
+  return applyDecorators(
+    ApiExtraModels(ApiSuccessResponseDto, UserResponseDto),
+    ApiOperation({ summary: 'Login user' }),
+    ApiOkResponseData(
+      UserResponseDto,
+      HttpStatus.OK,
+      'User login successfully',
+    ),
+    ApiErrorResponseData(HttpStatus.BAD_REQUEST, 'Credentials not found'),
+  );
+}

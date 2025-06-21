@@ -25,10 +25,6 @@ export class UserResponseDto {
 
   @ApiProperty()
   @Expose()
-  public tokenVersion: number;
-
-  @ApiProperty()
-  @Expose()
   public verifyEmail: boolean;
 
   @ApiProperty()
@@ -46,4 +42,10 @@ export class UserResponseDto {
   @ApiProperty()
   @Expose()
   public updatedAt: Date;
+}
+
+@Exclude()
+export class UserExtendDto extends UserResponseDto {
+  @Expose()
+  public tokenVersion: number;
 }

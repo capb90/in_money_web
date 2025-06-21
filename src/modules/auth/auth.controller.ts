@@ -13,6 +13,7 @@ import { UserResponseDto } from '@users/application/dtos/user-response.dto';
 import { ApiResponseFactory } from '@shared/factories/api-response.factory';
 import {
   AuthControllerDocs,
+  LoginDocs,
   RegisterDocs,
 } from '@auth/infrastructure/swagger/auth.swagger';
 import { I18nAppService } from '@app/configs';
@@ -43,11 +44,12 @@ export class AuthController {
   }
 
   @Post('login')
+  @LoginDocs()
   @HttpCode(HttpStatus.OK)
   public async login(
     @Body() userCredentials: LoginUserDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<IApiResponseDto<UserResponseDto>> {
     const userDto = await this.userService.validateUserLogin(userCredentials);
     const { tokens, session } =
       await this.authService.generateTokenAndSession(userDto);

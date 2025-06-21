@@ -9,7 +9,7 @@ import {
   IJwtGenerate,
   IJwtPayload,
 } from '@auth/domain/interfaces/jwt-payload.interface';
-import { UserResponseDto } from '@users/application/dtos/user-response.dto';
+import { UserExtendDto } from '@users/application/dtos/user-response.dto';
 import { randomUUID } from 'crypto';
 import { Response } from 'express';
 
@@ -58,7 +58,7 @@ export class AuthService {
   }
 
   public async generateTokenAndSession(
-    user: UserResponseDto,
+    user: UserExtendDto,
     deviceInfo?: string,
   ): Promise<{
     tokens: IJwtGenerate;

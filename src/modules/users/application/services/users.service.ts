@@ -2,7 +2,10 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IUserRepository } from '@users/domain/repositories/users.repository.interface';
 import { CreateUserDto } from '@users/application/dtos/create-user.dto';
 import { BcryptService } from '@shared/services/bcrypt.service';
-import { UserResponseDto } from '@users/application/dtos/user-response.dto';
+import {
+  UserExtendDto,
+  UserResponseDto,
+} from '@users/application/dtos/user-response.dto';
 import { transformToDto } from '@shared/utils/transform-to-dto.util';
 import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
 import { I18nAppService } from '@app/configs';
@@ -36,7 +39,7 @@ export class UsersService {
     return transformToDto(UserResponseDto, userDb);
   }
 
-  public async validateUserLogin(body: LoginUserDto): Promise<UserResponseDto> {
+  public async validateUserLogin(body: LoginUserDto): Promise<UserExtendDto> {
     const userExists = await this.repository.findByEmail(body.email);
     if (!userExists) {
       const message = await this.i18n.translate(
@@ -61,11 +64,11 @@ export class UsersService {
       });
     }
 
-    return transformToDto(UserResponseDto, userExists);
+    return transformToDto(UserExtendDto, userExists);
   }
 
-  public async validateUserById(id: string): Promise<UserResponseDto> {
+  public async validateUserById(id: string): Promise<UserExtendDto> {
     const userDb = await this.repository.findById(id);
-    return transformToDto(UserResponseDto, userDb);
+    return transformToDto(UserExtendDto, userDb);
   }
 }
