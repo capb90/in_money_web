@@ -73,7 +73,7 @@ export class UsersService {
     });
   }
 
-  public async validateUserById(id: string): Promise<UserExtendDto> {
+  public async validateUserById(id: string): Promise<UserExtendDto | null> {
     const userDb = await this.repository.findById(id);
     return transformToDto(UserExtendDto, userDb);
   }

@@ -12,6 +12,8 @@ import {
 import { UserExtendDto } from '@users/application/dtos/user-response.dto';
 import { randomUUID } from 'crypto';
 import { Response } from 'express';
+import { ErrorResponseFactory } from '@shared/factories/error-response.factory';
+import { UsersService } from '@users/application/services/users.service';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +22,7 @@ export class AuthService {
     private readonly sessionRepository: SessionRepositoryInterface,
     private readonly bcryptService: BcryptService,
     private readonly i18n: I18nAppService,
+    private readonly userService: UsersService,
     private jwtService: JwtService,
     private appConfigService: AppConfigService,
   ) {}
@@ -93,8 +96,53 @@ export class AuthService {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? 'strict' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
       path: '/auth',
     });
+  }
+
+  public async refreshAccessToken(refreshToken: string): Promise<{
+    tokens: IJwtGenerate;
+    session: SessionResponseDto;
+  }> {
+    const messageError = await this.i18n.translate('errors.auth.unauthorized');
+    let payload: IJwtPayload;
+
+    try {
+      payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.appConfigService.jwtRefreshToken.REFRESH_SECRET,
+      });
+    } catch {
+      throw ErrorResponseFactory.unauthorized({
+        message: messageError,
+      });
+    }
+
+    const user = await this.userService.validateUserById(payload.sub);
+
+    if (!user || user.tokenVersion !== payload.tokenVersion) {
+      throw ErrorResponseFactory.unauthorized({ message: messageError });
+    }
+
+    const session = await this.sessionRepository.findByIdAndUser(
+      payload.jti,
+      payload.sub,
+    );
+
+    if (!session || session.isRevoked || session.revokeAt < new Date()) {
+      throw ErrorResponseFactory.unauthorized({ message: messageError });
+    }
+
+    const isTokenValid = await this.bcryptService.compare(
+      refreshToken,
+      session.refreshTokenHash,
+    );
+
+    if (!isTokenValid) {
+      throw ErrorResponseFactory.unauthorized({ message: messageError });
+    }
+
+    await this.sessionRepository.update(session.id, { isRevoked: true });
+
+    return this.generateTokenAndSession(user);
   }
 }

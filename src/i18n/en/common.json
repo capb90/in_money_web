@@ -1,5 +1,6 @@
 {
   "entities": {
-    "user": "User"
+    "user": "User",
+    "session": "Session"
   }
 }
