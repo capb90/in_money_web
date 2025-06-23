@@ -54,6 +54,7 @@ export class AuthController {
     const { tokens, session } =
       await this.authService.generateTokenAndSession(userDto);
 
+    await this.userService.updateLastLogin(userDto.id);
     this.authService.setTokenCookie(res, tokens.refreshToken);
 
     return ApiResponseFactory.success(userDto, {

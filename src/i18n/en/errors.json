@@ -4,6 +4,7 @@
   "requiredFieldsMissing": "Required fields are missing",
   "invalidReference": "Cannot delete or update because there are existing relationships",
   "serviceTemporarilyUnavailable": "Service temporarily unavailable",
+  "notFountResource": "{{entity}} not found",
   "auth": {
     "emailAlreadyExist": "Email already exists",
     "emailNotExist": "E-mail is not registered",

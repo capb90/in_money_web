@@ -67,6 +67,12 @@ export class UsersService {
     return transformToDto(UserExtendDto, userExists);
   }
 
+  public async updateLastLogin(id: string): Promise<void> {
+    await this.repository.update(id, {
+      lastLogin: new Date(),
+    });
+  }
+
   public async validateUserById(id: string): Promise<UserExtendDto> {
     const userDb = await this.repository.findById(id);
     return transformToDto(UserExtendDto, userDb);
